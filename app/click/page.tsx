@@ -164,11 +164,11 @@ export default function ClickPage() {
         </div> */}
 
         {/* Click Image */}
-        <Card className="infiniteloop-card border-2 border-infiniteloop-orange/30">
+        <Card className="infiniteloop-card">
           {/* <CardHeader>
             <CardTitle className="text-center text-gray-900 dark:text-white">Click Tracking Image</CardTitle>
           </CardHeader> */}
-          <CardContent className="p-6">
+          <CardContent className="p-0">
             <div className="relative w-full max-w-2xl mx-auto">
               <Image
                 ref={imageRef}
@@ -187,7 +187,7 @@ export default function ClickPage() {
               </div>
             </div>
 
-            <div className="text-center mt-4">
+            <div className="text-center m-4">
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Click anywhere on the image to record coordinates. All clicks are tracked in real-time!
               </p>
