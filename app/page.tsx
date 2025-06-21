@@ -121,7 +121,7 @@ export default function HomePage() {
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">QUIZ CHALLENGE</h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Test out what you just learned
+            Test your programming knowledge with our interactive AI-powered quiz
           </p>
         </div>
 
@@ -129,12 +129,12 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto">
           <Card className="infiniteloop-card border-2 border-infiniteloop-orange/30">
             <CardHeader className="text-center">
-              {/* <div className="mx-auto mb-4 w-20 h-20 bg-gradient-to-br from-infiniteloop-yellow to-infiniteloop-orange rounded-2xl flex items-center justify-center">
+              <div className="mx-auto mb-4 w-20 h-20 bg-gradient-to-br from-infiniteloop-yellow to-infiniteloop-orange rounded-2xl flex items-center justify-center">
                 <Trophy className="w-10 h-10 text-white" />
-              </div> */}
+              </div>
               <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">Challenge Details</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                First to complete with highest accuracy wins!
+                First to complete wins the ultimate programming challenge!
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -156,11 +156,15 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-infiniteloop-yellow rounded-full"></div>
-                  <span>Beware of the timer</span>
+                  <span>Auto-skip when time runs out</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-infiniteloop-orange rounded-full"></div>
-                  <span>Only one attempt is allowed</span>
+                  <span>One attempt per device</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-infiniteloop-yellow rounded-full"></div>
+                  <span>Real-time leaderboard</span>
                 </div>
               </div>
 
@@ -169,7 +173,7 @@ export default function HomePage() {
                   <div className="mx-auto mb-4 w-16 h-16 bg-infiniteloop-gradient rounded-2xl flex items-center justify-center">
                     <Play className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Let's go!</h3>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Start Your Journey</h3>
                   <p className="text-gray-600 dark:text-gray-300">Enter your nickname and begin the challenge</p>
                 </div>
 
