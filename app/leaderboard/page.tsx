@@ -26,8 +26,7 @@ export default function LeaderboardPage() {
       const { data, error } = await supabase
         .from("quiz_results")
         .select("*")
-        .order("score", { ascending: false })
-        .order("total_time_seconds", { ascending: true })
+        .order("score", { ascending: false }) // Sort by score (highest first)
         .limit(50)
 
       if (error) {
@@ -76,6 +75,10 @@ export default function LeaderboardPage() {
     return `${minutes}m ${remainingSeconds}s`
   }
 
+  const getMaxPossibleScore = () => {
+    return 500 * 5 // 500 points per question, 5 questions
+  }
+
   const getRankIcon = (index: number) => {
     switch (index) {
       case 0:
@@ -120,13 +123,13 @@ export default function LeaderboardPage() {
 
           {/* Navigation */}
           <div className="flex justify-center space-x-4">
-            <Button
+            {/* <Button
               onClick={() => router.push("/reveal")}
               className="bg-infiniteloop-gradient hover:bg-infiniteloop-gradient-dark text-white font-semibold"
             >
               <Eye className="w-4 h-4 mr-2" />
               View Reveal
-            </Button>
+            </Button> */}
             <Button
               onClick={() => router.push("/")}
               variant="outline"
@@ -149,15 +152,14 @@ export default function LeaderboardPage() {
             leaderboard.map((entry, index) => (
               <Card
                 key={entry.username}
-                className={`infiniteloop-card border ${
-                  index === 0
+                className={`infiniteloop-card border ${index === 0
                     ? "border-yellow-400 bg-gradient-to-r from-yellow-50/10 to-yellow-100/10"
                     : index === 1
                       ? "border-gray-400 bg-gradient-to-r from-gray-50/10 to-gray-100/10"
                       : index === 2
                         ? "border-amber-400 bg-gradient-to-r from-amber-50/10 to-amber-100/10"
                         : "border-infiniteloop-orange/20"
-                }`}
+                  }`}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
@@ -165,25 +167,20 @@ export default function LeaderboardPage() {
                       <div className="flex items-center justify-center w-8 h-8">{getRankIcon(index)}</div>
                       <div>
                         <h3 className="font-bold text-lg text-gray-900 dark:text-white">{entry.username}</h3>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                        {/* <p className="text-xs text-gray-600 dark:text-gray-400">
                           {new Date(entry.completed_at).toLocaleDateString()}
-                        </p>
+                        </p> */}
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-4">
                       <div className="text-right">
-                        <div className="text-xl font-bold infiniteloop-gradient-text">
-                          {entry.score}/{entry.total_questions}
+                        <div className="text-2xl font-bold infiniteloop-gradient-text">
+                          {Math.round(entry.score).toLocaleString()}
                         </div>
-                        <div className="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                          {Math.round((entry.score / entry.total_questions) * 100)}%
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 bg-infiniteloop-orange/10 px-2 py-1 rounded-lg">
-                        <Clock className="w-3 h-3" />
-                        <span className="text-xs font-medium">{formatTime(entry.total_time_seconds)}</span>
+                        {/* <div className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                          {Math.round((entry.score / getMaxPossibleScore()) * 100)}% of max
+                        </div> */}
                       </div>
                     </div>
                   </div>

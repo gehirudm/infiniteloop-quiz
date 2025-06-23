@@ -132,8 +132,7 @@ export async function getLeaderboard(): Promise<QuizResult[]> {
   const { data, error } = await supabase
     .from("quiz_results")
     .select("*")
-    .order("score", { ascending: false })
-    .order("total_time_seconds", { ascending: true })
+    .order("score", { ascending: false }) // Sort by score instead of accuracy
     .limit(50)
 
   if (error) {
@@ -142,4 +141,34 @@ export async function getLeaderboard(): Promise<QuizResult[]> {
   }
 
   return data
+}
+
+// Admin functions for resetting system state
+export async function resetAllData(): Promise<boolean> {
+  try {
+    // Delete all data from all tables
+    const { error: sessionsError } = await supabase
+      .from("quiz_sessions")
+      .delete()
+      .neq("id", "00000000-0000-0000-0000-000000000000")
+    const { error: resultsError } = await supabase
+      .from("quiz_results")
+      .delete()
+      .neq("id", "00000000-0000-0000-0000-000000000000")
+    const { error: timingsError } = await supabase
+      .from("question_timings")
+      .delete()
+      .neq("id", "00000000-0000-0000-0000-000000000000")
+    const { error: clicksError } = await supabase.from("clicks").delete().neq("id", 0)
+
+    if (sessionsError || resultsError || timingsError || clicksError) {
+      console.error("Error resetting data:", { sessionsError, resultsError, timingsError, clicksError })
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error("Failed to reset data:", error)
+    return false
+  }
 }

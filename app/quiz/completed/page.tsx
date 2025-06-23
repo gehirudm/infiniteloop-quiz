@@ -53,7 +53,11 @@ export default function QuizCompletedPage() {
     )
   }
 
-  const percentage = Math.round((result.score / result.total_questions) * 100)
+  const getMaxPossibleScore = () => {
+    return 500 * result.total_questions // 500 points per question, 5 questions
+  }
+
+  const percentage = Math.round((result.score / getMaxPossibleScore()) * 100)
   const getScoreColor = () => {
     if (percentage >= 80) return "text-green-600"
     if (percentage >= 60) return "text-infiniteloop-orange"
@@ -67,7 +71,7 @@ export default function QuizCompletedPage() {
   }
 
   const getScoreIcon = () => {
-    if (percentage >= 80) return <Trophy className="w-12 h-12 text-yellow-500" />
+    if (percentage >= 80) return <Trophy className="w-12 h-12 text-white-500" />
     if (percentage >= 60) return <Award className="w-12 h-12 text-infiniteloop-orange" />
     return <Target className="w-12 h-12 text-red-500" />
   }
@@ -102,7 +106,7 @@ export default function QuizCompletedPage() {
             <div className="bg-gradient-to-br from-infiniteloop-cream to-white dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8">
               <div className="text-center mb-6">
                 <div className={`text-6xl font-bold ${getScoreColor()} mb-2`}>
-                  {result.score}/{result.total_questions}
+                  {result.score}
                 </div>
                 <div className={`text-3xl font-semibold ${getScoreColor()}`}>{percentage}%</div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Final Score</p>

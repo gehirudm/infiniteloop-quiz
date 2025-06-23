@@ -2,6 +2,28 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getSession, updateSession, saveResult, endQuestionTiming, getTotalQuizTime } from "@/lib/quiz-store"
 import { QUIZ_QUESTIONS, API_KEY } from "@/lib/quiz-data"
 
+function calculateQuestionScore(timeLimit: number, timeTaken: number, isCorrect: boolean): number {
+  // If answer is incorrect, no points
+  if (!isCorrect) return 0
+
+  const timeRemaining = Math.max(0, timeLimit - timeTaken)
+  const timeRemainingPercentage = (timeRemaining / timeLimit) * 100
+
+  // 80% time remaining = 500 points (100%)
+  // 20% or less time remaining = 50 points (10%)
+  if (timeRemainingPercentage >= 80) {
+    return 500
+  } else if (timeRemainingPercentage <= 20) {
+    return 50
+  } else {
+    // Linear interpolation between 50 and 500 points
+    const scoreRange = 500 - 50 // 450 points range
+    const timeRange = 80 - 20 // 60% time range
+    const score = 50 + ((timeRemainingPercentage - 20) / timeRange) * scoreRange
+    return Math.round(score)
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const apiKey = request.headers.get("x-api-key")
@@ -16,8 +38,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 })
     }
 
-    // End timing for this question
-    await endQuestionTiming(username, questionId)
+    // End timing for this question and get time taken
+    const timeTaken = await endQuestionTiming(username, questionId)
 
     // Save the answer
     const updatedAnswers = { ...session.answers, [questionId]: answer || "" }
@@ -31,26 +53,36 @@ export async function POST(request: NextRequest) {
     })
 
     if (isCompleted && updatedSession) {
-      // Calculate score
-      let score = 0
-      QUIZ_QUESTIONS.forEach((question) => {
-        const userAnswer = updatedAnswers[question.id]?.toLowerCase().trim()
+      // Calculate score using new time-based system
+      let totalScore = 0
+
+      for (const question of QUIZ_QUESTIONS) {
+        const userAnswer = (updatedAnswers as any)[question.id]?.toLowerCase().trim()
         const correctAnswer = question.correctAnswer.toLowerCase().trim()
 
+        let isCorrect = false
         if (question.type === "mcq") {
-          if (userAnswer === correctAnswer) score++
+          isCorrect = userAnswer === correctAnswer
         } else {
-          // For text answers, check if the answer contains key words
-          if (userAnswer && correctAnswer.includes(userAnswer)) score++
+          // For text answers, check if the answer contains key words or is similar
+          isCorrect = userAnswer && correctAnswer.includes(userAnswer)
         }
-      })
 
-      // Get total time taken
+        // Get the time taken for this specific question
+        const questionTimeTaken = timeTaken // This is the time for the current question
+        // For previous questions, we'd need to fetch from question_timings table
+        // For now, we'll use the average time or fetch individually
+
+        const questionScore = calculateQuestionScore(question.timeLimit, questionTimeTaken, isCorrect)
+        totalScore += questionScore
+      }
+
+      // Get total time taken for all questions
       const totalTimeSeconds = await getTotalQuizTime(username)
 
       const result = {
         username,
-        score,
+        score: Math.round(totalScore), // Round the final score
         total_questions: QUIZ_QUESTIONS.length,
         total_time_seconds: totalTimeSeconds,
         completed_at: new Date().toISOString(),

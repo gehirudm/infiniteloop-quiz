@@ -1,0 +1,43 @@
+@keyframes bounce-in {
+    0% {
+    transform: translate(-50%, -50%) scale(0) rotate(180deg);
+    opacity: 0;
+    }
+    50% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(90deg);
+    opacity: 0.8;
+    }
+    100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+    }
+}
+
+@theme {
+  --animate-slow-bounce: slow-bounce 1s ease-in-out infinite;
+
+  @keyframes slow-bounce {
+    0%, 100% {
+        transform: translateY(-10%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+        transform: none;
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+}
+
+.animate-bounce-in {
+    animation: bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes float-gentle {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+    animation: float-gentle 4s ease-in-out infinite;
+}
+

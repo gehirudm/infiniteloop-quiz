@@ -11,9 +11,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Next.js Community Starter",
-  description: "A modern Next.js starter with theme support",
-    generator: 'v0.dev'
+  title: "Infiniteloop 3.0",
+  description: "Welcome to the INFINITELOOP 3.0 Quiz Challenge!",
 }
 
 export default function RootLayout({
